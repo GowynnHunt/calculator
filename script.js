@@ -1,3 +1,55 @@
+let firstNumber = null;
+let secondNumber = null;
+let operator = null;
+
+const buttons = document.querySelector("#buttons");
+buttons.addEventListener("click", buttonHandler);
+
+function buttonHandler(event) {
+  let id = event.target.id;
+
+  // firstNumber handling
+  if (isNum(id) && operator === null) {
+    if (firstNumber === null) {
+      firstNumber = id;
+    } else {
+      firstNumber += id;
+    }
+    display(firstNumber);
+  }
+
+  // secondNumber handling
+  if (isNum(id) && operator !== null) {
+    if (secondNumber === null) {
+      secondNumber = id;
+    } else {
+      secondNumber += id;
+    }
+    display(secondNumber);
+  }
+
+  // operator handling
+  if (isOperator(id)) {
+    if (secondNumber === null) {
+      operator = id;
+    } else {
+      calculate();
+      operator = id;
+    }
+  }
+
+  if (id === "clear") {
+    firstNumber = null;
+    secondNumber = null;
+    operator = null;
+    display("0");
+  }
+
+  if (id === "=") {
+    calculate();
+  }
+}
+
 function add(a, b) {
   return a + b;
 }
@@ -14,7 +66,7 @@ function divide(a, b) {
   return a / b;
 }
 
-function operate(operator, a, b) {
+function operate(a, operator, b) {
   a = Number(a);
   b = Number(b);
   switch (operator) {
@@ -31,6 +83,13 @@ function operate(operator, a, b) {
   }
 }
 
+function calculate() {
+  firstNumber = operate(firstNumber, operator, secondNumber);
+  secondNumber = null;
+  operator = null;
+  display(firstNumber);
+}
+
 // Regex matching for numbers
 function isNum(str) {
   return str.match(/[0-9]/);
@@ -41,73 +100,6 @@ function isOperator(str) {
   return str.match(/[+\-*/]/);
 }
 
-function buttonHandler(event) {
-  let id = event.target.id;
-
-  if (isNum(id)) {
-    if (calcArr[idx] === undefined || calcArr[idx] === "0") {
-      calcArr[idx] = id;
-    } else if (isOperator(calcArr[idx])) {
-      idx++;
-      calcArr[idx] = id;
-    } else {
-      calcArr[idx] += id;
-    }
-  } else if (isOperator(id)) {
-    if (isNum(calcArr[idx])) idx++;
-    calcArr[idx] = id;
-  } else if (id === "clear") {
-    // Matches clear
-    calcArr = ["0"];
-    idx = 0;
-  } else if (id === "=") {
-    calculate(calcArr);
-  }
-  display.textContent = calcArr.join(" ");
-  console.log(calcArr);
+function display(str) {
+  document.querySelector("#display").textContent = str;
 }
-
-// Calculates by taking slices of calcArr. This way, the user can input
-// as many operation as they want at once before choosing to calculate.
-
-// It's worth mentioning that this won't properly calculate the value of
-// more complex interactions.
-//
-// Example: 12 - 7 + 6 * 3 = 23, but my calculator will return 33
-// because it strictly solves from left to right.
-function calculate(arr) {
-  // Guard against operation without enough operands
-  if (arr.length < 3 || arr.length % 2 === 0) return;
-
-  // Stage initial values
-  let slice = [];
-  let total = 0;
-
-  //
-  for (let i = 0; i < Math.floor(arr.length / 2); i++) {
-    if (i === 0) {
-      // Initial slice
-      slice = arr.slice(0, 3);
-      total = operate(slice[1], slice[0], slice[2]);
-    } else {
-      // Every slice after the first will grab the next operation and
-      // operand and use the previous total as its first value
-      slice = arr.slice(i * 2 + 1, i * 2 + 3);
-      total = operate(slice[0], total, slice[1]);
-    }
-  }
-
-  // Needs string to display
-  calcArr = [total.toString()];
-
-  // Resetting idx for further operation
-  idx = 0;
-}
-
-let calcArr = [];
-let idx = 0;
-
-const display = document.querySelector("#display");
-
-const buttons = document.querySelectorAll("#calculator button");
-buttons.forEach((button) => button.addEventListener("click", buttonHandler));
