@@ -97,6 +97,11 @@ function operate(a, operator, b) {
 }
 
 function calculate() {
+  // Guard against early calculation
+  if (firstNumber === null || secondNumber === null || operator === null) {
+    return;
+  }
+
   firstNumber = operate(firstNumber, operator, secondNumber);
   // Check if the number is a float before rounding it
   firstNumber = firstNumber % 1 === 0 ? firstNumber : firstNumber.toFixed(2);
