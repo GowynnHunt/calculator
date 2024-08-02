@@ -38,6 +38,16 @@ function buttonHandler(event) {
     }
   }
 
+  if (id === "toggle") {
+    if (secondNumber === null) {
+      firstNumber = toggle(firstNumber);
+      display(firstNumber);
+    } else {
+      secondNumber = toggle(secondNumber);
+      display(secondNumber);
+    }
+  }
+
   if (id === "clear") {
     firstNumber = null;
     secondNumber = null;
@@ -91,6 +101,18 @@ function calculate() {
   secondNumber = null;
   operator = null;
   display(firstNumber);
+}
+
+function toggle(str) {
+  let current = [...str];
+
+  if (current[0] === "-") {
+    current.shift();
+  } else {
+    current.unshift("-");
+  }
+
+  return current.join("");
 }
 
 // Regex matching for numbers
