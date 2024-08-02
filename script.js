@@ -84,7 +84,7 @@ function operate(a, operator, b) {
 }
 
 function calculate() {
-  firstNumber = operate(firstNumber, operator, secondNumber);
+  firstNumber = operate(firstNumber, operator, secondNumber).toFixed(2);
   secondNumber = null;
   operator = null;
   display(firstNumber);
