@@ -78,6 +78,7 @@ body {
   font-size: 2rem;
   width: 1rem;
   flex: auto;
+  border-color: #628aa4;
 }
 
 #calculator .number {
@@ -88,4 +89,8 @@ body {
 #calculator .operation,
 #clear {
   background-color: #628aa4;
+}
+
+#calculator .operation:focus {
+  background-color: #1b76b1;
 }
