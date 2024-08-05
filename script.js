@@ -38,6 +38,16 @@ function buttonHandler(event) {
     }
   }
 
+  if (id === ".") {
+    if (secondNumber === null) {
+      firstNumber = convert(firstNumber);
+      display(firstNumber);
+    } else {
+      secondNumber = convert(secondNumber);
+      display(secondNumber);
+    }
+  }
+
   if (id === "toggle") {
     if (secondNumber === null) {
       firstNumber = toggle(firstNumber);
@@ -105,6 +115,8 @@ function calculate() {
   firstNumber = operate(firstNumber, operator, secondNumber);
   // Check if the number is a float before rounding it
   firstNumber = firstNumber % 1 === 0 ? firstNumber : firstNumber.toFixed(2);
+  // Decimal conversion will break if the variable is not a string
+  firstNumber = String(firstNumber);
 
   secondNumber = null;
   operator = null;
@@ -118,6 +130,16 @@ function toggle(str) {
     current.shift();
   } else {
     current.unshift("-");
+  }
+
+  return current.join("");
+}
+
+function convert(str) {
+  let current = [...str];
+
+  if (!current.includes(".")) {
+    current.push(".");
   }
 
   return current.join("");
